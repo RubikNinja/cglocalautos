@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CG Local Autos</title>
+  <meta name="description" content="Browse and sell cars in Casa Grande with a clean, user-friendly marketplace." />
+
+  <style>
+    :root{
+      --bg:#ffffff;
+      --text:#0b0d12;
+      --muted:#5b6472;
+      --line:#e6e8ee;
+
+      --blue:#1677ff;
+      --orange:#ff8a00;
+
+      --radius:14px;
+      --max: 1120px;
+      --font: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+
+    *{ box-sizing:border-box; }
+    body{
+      margin:0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.35;
+    }
+    a{ color:inherit; text-decoration:none; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 18px 16px 64px;
+    }
+
+    header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding: 10px 0 20px;
+      gap: 12px;
+    }
+    .brand{
+      font-weight: 900;
+      letter-spacing: -0.2px;
+      font-size: 18px;
+      white-space: nowrap;
+    }
+    nav{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      font-size: 14px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    nav a, nav button{
+      background:none;
+      border:none;
+      padding: 8px 10px;
+      border-radius: 10px;
+      cursor:pointer;
+      font: inherit;
+      color:inherit;
+      white-space:nowrap;
+    }
+    nav a:hover, nav button:hover{ background:#f4f6fa; }
+
+    .hero{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      text-align:center;
+      padding: 10px 0 18px;
+    }
+    .hero h1{
+      margin: 8px 0 8px;
+      font-size: 42px;
+      font-weight: 950;
+      letter-spacing: -1.2px;
+    }
+    .hero p{
+      margin: 0 0 18px;
+      color: var(--muted);
+      max-width: 72ch;
+      font-size: 15px;
+    }
+
+    .searchCard{
+      width: 100%;
+      max-width: 980px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:#fff;
+      padding: 14px;
+    }
+
+    .filtersRow{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 10px;
+      align-items:end;
+    }
+    .field{
+      grid-column: span 3;
+      display:flex;
+      flex-direction:column;
+      gap: 6px;
+      text-align:left;
+    }
+    label{
+      font-size:12px;
+      color: var(--muted);
+    }
+    input, select{
+      width: 100%;
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      outline: none;
+      background:#fff;
+      color: var(--text);
+      font-size: 14px;
+      font-family: var(--font);
+    }
+    input:focus, select:focus{
+      border-color: rgba(22,119,255,.55);
+      box-shadow: 0 0 0 3px rgba(22,119,255,.12);
+    }
+
+    .actionsRow{
+      display:flex;
+      gap: 10px;
+      justify-content:center;
+      margin-top: 12px;
+      flex-wrap:wrap;
+    }
+    .btn{
+      border: 1px solid var(--line);
+      background:#fff;
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 900;
+      cursor:pointer;
+      font-family: var(--font);
+      min-width: 180px;
+    }
+    .btn:hover{ background:#f4f6fa; }
+    .btn.primary{
+      border-color: rgba(22,119,255,.25);
+      background: var(--blue);
+      color: #fff;
+    }
+    .btn.primary:hover{ filter: brightness(.97); }
+    .btn.orange{
+      border-color: rgba(255,138,0,.25);
+      background: var(--orange);
+      color:#fff;
+    }
+
+    .pillRow{
+      display:flex;
+      justify-content:center;
+      gap: 10px;
+      flex-wrap:wrap;
+      margin-top: 10px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 9px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 13px;
+      background:#fff;
+      white-space:nowrap;
+    }
+
+    .section{
+      margin-top: 26px;
+    }
+    .sectionTop{
+      display:flex;
+      align-items:flex-end;
+      justify-content:space-between;
+      gap: 12px;
+      flex-wrap:wrap;
+      margin-bottom: 10px;
+    }
+    .sectionTitle{
+      margin:0;
+      font-size: 22px;
+      font-weight: 950;
+      letter-spacing: -0.6px;
+    }
+    .sectionSub{
+      margin: 4px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .sectionRight{
+      display:flex;
+      gap: 10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .seg{
+      display:inline-flex;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .seg button{
+      border: none;
+      background: transparent;
+      padding: 9px 12px;
+      font-weight: 900;
+      cursor:pointer;
+      font-family: var(--font);
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .seg button.active{
+      background: rgba(22,119,255,.10);
+      color: #0b2a55;
+      border-right: 1px solid rgba(22,119,255,.12);
+      border-left: 1px solid rgba(22,119,255,.12);
+    }
+
+    .card{
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background:#fff;
+      overflow:hidden;
+      cursor:pointer;
+      display:flex;
+      flex-direction:column;
+      min-height: 270px;
+    }
+    .photo{
+      background:#f3f4f6;
+      position:relative;
+    }
+    .photo img{
+      width:100%;
+      height: 230px;
+      object-fit: cover;
+      display:block;
+    }
+    .badge{
+      position:absolute;
+      left:10px;
+      top:10px;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding: 7px 10px;
+      border: 1px solid rgba(255,138,0,.35);
+      border-radius: 999px;
+      background:#fff;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .dot{
+      width:7px;height:7px;border-radius:999px; display:inline-block;
+      background: var(--orange);
+    }
+
+    .body{
+      padding: 12px;
+      display:flex;
+      flex-direction:column;
+      gap: 10px;
+      flex:1;
+    }
+    .titleRow{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 10px;
+    }
+    .carTitle{
+      margin:0;
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing: -0.2px;
+    }
+    .price{
+      font-weight: 950;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(22,119,255,.10);
+      border: 1px solid rgba(22,119,255,.18);
+      color: #0b2a55;
+      white-space:nowrap;
+      font-size: 13px;
+    }
+    .meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .meta span{
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background:#fff;
+      white-space:nowrap;
+    }
+
+    .carousel{
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background:#fff;
+      overflow:hidden;
+      position:relative;
+    }
+    .track{
+      display:flex;
+      transition: transform .35s ease;
+      will-change: transform;
+    }
+    .slide{
+      flex: 0 0 100%;
+      padding: 12px;
+    }
+    .navBtn{
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 18px;
+      font-weight: 900;
+      opacity: .92;
+    }
+    .navBtn:hover{ background:#f4f6fa; }
+    .navPrev{ left: 12px; }
+    .navNext{ right: 12px; }
+
+    .carouselFooter{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 10px;
+      padding: 10px 12px 12px;
+      border-top: 1px solid var(--line);
+      background:#fff;
+      flex-wrap:wrap;
+    }
+    .dots{
+      display:flex;
+      gap: 8px;
+      align-items:center;
+    }
+    .dotBtn{
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      border: 1px solid #cfd6e3;
+      background:#fff;
+      cursor:pointer;
+      padding:0;
+    }
+    .dotBtn.active{
+      background: var(--blue);
+      border-color: var(--blue);
+    }
+
+    .featuredGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .empty{
+      border: 1px dashed #e7eaf1;
+      border-radius: 18px;
+      padding: 22px 14px;
+      text-align:center;
+      color: var(--muted);
+      background:#fff;
+    }
+
+    @media (max-width: 980px){
+      .hero h1{ font-size: 36px; }
+      .field{ grid-column: span 6; }
+      .featuredGrid{ grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px){
+      .hero h1{ font-size: 30px; letter-spacing: -0.8px; }
+      .field{ grid-column: span 12; }
+      .btn{ min-width: 140px; width: 100%; }
+      .featuredGrid{ grid-template-columns: 1fr; }
+      .navBtn{ display:none; }
+      .photo img{ height: 210px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">CG Local Autos</div>
+      <nav>
+        <a href="./listings.html">Browse</a>
+        <button id="sellBtn" type="button">Sell</button>
+        <a href="./services.html">Services</a>
+        <a href="./login.html" id="loginLink">Login</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <h1>Find the perfect vehicle</h1>
+      <p>Browse local listings. Sell your car for free. Promote to get featured for 7 days.</p>
+
+      <div class="searchCard" aria-label="Search cars">
+        <div class="filtersRow">
+          <div class="field">
+            <label for="make">Make</label>
+            <select id="make">
+              <option value="">Any</option>
+              <option>Chevrolet</option><option>Ford</option><option>Honda</option><option>Toyota</option>
+              <option>Nissan</option><option>GMC</option><option>RAM</option><option>Hyundai</option>
+              <option>Kia</option><option>Jeep</option><option>BMW</option><option>Mercedes-Benz</option>
+              <option>Subaru</option><option>Volkswagen</option><option>Mazda</option><option>Dodge</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="q">Model / keyword</label>
+            <input id="q" placeholder="civic, camry, f-150…" />
+          </div>
+
+          <div class="field">
+            <label for="yearMin">Year min</label>
+            <select id="yearMin"></select>
+          </div>
+
+          <div class="field">
+            <label for="yearMax">Year max</label>
+            <select id="yearMax"></select>
+          </div>
+
+          <div class="field">
+            <label for="priceMax">Max price</label>
+            <select id="priceMax">
+              <option value="">No max</option>
+              <option value="5000">$5,000</option>
+              <option value="10000">$10,000</option>
+              <option value="15000">$15,000</option>
+              <option value="20000">$20,000</option>
+              <option value="30000">$30,000</option>
+              <option value="40000">$40,000</option>
+              <option value="50000">$50,000</option>
+              <option value="75000">$75,000</option>
+              <option value="100000">$100,000</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="milesMax">Max miles</label>
+            <select id="milesMax">
+              <option value="">No max</option>
+              <option value="25000">25,000</option>
+              <option value="50000">50,000</option>
+              <option value="75000">75,000</option>
+              <option value="100000">100,000</option>
+              <option value="150000">150,000</option>
+              <option value="200000">200,000</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="actionsRow">
+          <button class="btn primary" id="searchBtn" type="button">Search</button>
+          <button class="btn" id="clearBtn" type="button">Clear</button>
+        </div>
+
+        <div class="pillRow">
+          <span class="pill" id="authPill">Checking login…</span>
+          <span class="pill">Featured = promoted listings</span>
+          <a class="pill" href="./listings.html?featured=1" style="color:inherit">View featured</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" aria-label="Featured listings">
+      <div class="sectionTop">
+        <div>
+          <h2 class="sectionTitle">Featured</h2>
+          <p class="sectionSub">Promoted listings (active for 7 days from purchase).</p>
+        </div>
+
+        <div class="sectionRight">
+          <div class="seg" aria-label="Featured view toggle">
+            <button id="carouselModeBtn" class="active" type="button">Carousel</button>
+            <button id="gridModeBtn" type="button">Grid</button>
+          </div>
+          <a class="btn orange" href="./services.html">Promote</a>
+        </div>
+      </div>
+
+      <div class="carousel" id="carousel" style="display:block;">
+        <button class="navBtn navPrev" id="prevBtn" type="button" aria-label="Previous">‹</button>
+        <button class="navBtn navNext" id="nextBtn" type="button" aria-label="Next">›</button>
+
+        <div class="track" id="track"></div>
+
+        <div class="carouselFooter">
+          <div class="pill" id="featuredCount">Loading…</div>
+          <div class="dots" id="dots" aria-label="Slide dots"></div>
+        </div>
+      </div>
+
+      <div id="featuredGrid" class="featuredGrid" style="display:none;"></div>
+
+      <div id="featuredEmpty" class="empty" style="display:none;">
+        No featured listings yet.
+        <div style="margin-top:10px;">
+          <a class="btn orange" href="./upload.html">Post + promote</a>
+          <a class="btn" href="./listings.html">Browse all</a>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { auth, db } from "./js/firebase.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-auth.js";
+    import { collection, getDocs, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/12.8.0/firebase-firestore.js";
+
+    // -----------------------------
+    // Auth UI
+    // -----------------------------
+    const authPill = document.getElementById("authPill");
+    const loginLink = document.getElementById("loginLink");
+    const sellBtn = document.getElementById("sellBtn");
+
+    let isLoggedIn = false;
+
+    function requireLogin(nextUrl){
+      location.href = `./login.html?next=${encodeURIComponent(nextUrl || "./index.html")}`;
+    }
+
+    function setAuthUI(){
+      authPill.textContent = isLoggedIn ? "Logged in" : "Not logged in";
+      if(isLoggedIn){
+        loginLink.textContent = "Logout";
+        loginLink.href = "#";
+      } else {
+        loginLink.textContent = "Login";
+        loginLink.href = "./login.html";
+      }
+    }
+
+    onAuthStateChanged(auth, (user)=>{
+      isLoggedIn = !!user;
+      setAuthUI();
+    });
+
+    loginLink.addEventListener("click", async (e)=>{
+      if(!isLoggedIn) return;
+      e.preventDefault();
+      await signOut(auth);
+    });
+
+    sellBtn.addEventListener("click", ()=>{
+      if(!isLoggedIn) return requireLogin("./upload.html");
+      location.href = "./upload.html";
+    });
+
+    // -----------------------------
+    // Search filters -> listings.html
+    // -----------------------------
+    const makeEl = document.getElementById("make");
+    const qEl = document.getElementById("q");
+    const yearMinEl = document.getElementById("yearMin");
+    const yearMaxEl = document.getElementById("yearMax");
+    const priceMaxEl = document.getElementById("priceMax");
+    const milesMaxEl = document.getElementById("milesMax");
+
+    const searchBtn = document.getElementById("searchBtn");
+    const clearBtn = document.getElementById("clearBtn");
+
+    const nowY = new Date().getFullYear();
+    function yearOptions(){
+      const years = Array.from({length: nowY - 1989}, (_,i)=> nowY - i);
+      return `<option value="">Any</option>` + years.map(y => `<option value="${y}">${y}</option>`).join("");
+    }
+    yearMinEl.innerHTML = yearOptions();
+    yearMaxEl.innerHTML = yearOptions();
+
+    function buildSearchURL(){
+      const p = new URLSearchParams();
+      if(qEl.value.trim()) p.set("q", qEl.value.trim());
+      if(makeEl.value) p.set("make", makeEl.value);
+      if(yearMinEl.value) p.set("yearMin", yearMinEl.value);
+      if(yearMaxEl.value) p.set("yearMax", yearMaxEl.value);
+      if(priceMaxEl.value) p.set("priceMax", priceMaxEl.value);
+      if(milesMaxEl.value) p.set("milesMax", milesMaxEl.value);
+      const qs = p.toString();
+      return "./listings.html" + (qs ? `?${qs}` : "");
+    }
+
+    function clearFilters(){
+      makeEl.value = "";
+      qEl.value = "";
+      yearMinEl.value = "";
+      yearMaxEl.value = "";
+      priceMaxEl.value = "";
+      milesMaxEl.value = "";
+    }
+
+    searchBtn.addEventListener("click", ()=> location.href = buildSearchURL());
+    clearBtn.addEventListener("click", clearFilters);
+    qEl.addEventListener("keydown", (e)=>{ if(e.key === "Enter") location.href = buildSearchURL(); });
+
+    // -----------------------------
+    // Featured: Firestore -> Carousel/Grid
+    // NO INDEX REQUIRED VERSION:
+    // query: orderBy(createdAt) only, then filter in JS.
+    // -----------------------------
+    const carousel = document.getElementById("carousel");
+    const track = document.getElementById("track");
+    const dots = document.getElementById("dots");
+    const featuredGrid = document.getElementById("featuredGrid");
+    const featuredEmpty = document.getElementById("featuredEmpty");
+    const featuredCount = document.getElementById("featuredCount");
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const carouselModeBtn = document.getElementById("carouselModeBtn");
+    const gridModeBtn = document.getElementById("gridModeBtn");
+
+    const fmtMoney = n => new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}).format(n || 0);
+    const fmtNum = n => new Intl.NumberFormat("en-US").format(n || 0);
+
+    function tsToMillis(ts){
+      try { return ts?.toMillis ? ts.toMillis() : 0; } catch { return 0; }
+    }
+
+    function listingTitle(l){
+      return `${l.year || ""} ${l.make || ""} ${l.model || ""}`.trim() || "Listing";
+    }
+
+    function cardMarkup(l){
+      const photos = Array.isArray(l.photoUrls) ? l.photoUrls : [];
+      const img = photos[0];
+      const title = listingTitle(l);
+
+      return `
+        <div class="card" data-id="${l.id}">
+          <div class="photo">
+            ${img ? `<img src="${img}" alt="${title}">` : `<div style="height:230px;display:flex;align-items:center;justify-content:center;color:#5b6472;">Photo</div>`}
+            <div class="badge"><span class="dot"></span>Featured</div>
+          </div>
+          <div class="body">
+            <div class="titleRow">
+              <h3 class="carTitle">${title}</h3>
+              <div class="price">${fmtMoney(l.price)}</div>
+            </div>
+            <div class="meta">
+              ${l.miles != null ? `<span>${fmtNum(l.miles)} miles</span>` : ``}
+              ${l.titleStatus ? `<span>Title: ${l.titleStatus}</span>` : ``}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function goToListing(id){
+      location.href = `./listings.html#listing=${encodeURIComponent(id)}`;
+    }
+
+    let featured = [];
+    let idx = 0;
+    let timer = null;
+
+    function setMode(mode){
+      const isCarousel = mode === "carousel";
+      carousel.style.display = isCarousel ? "block" : "none";
+      featuredGrid.style.display = isCarousel ? "none" : "grid";
+
+      carouselModeBtn.classList.toggle("active", isCarousel);
+      gridModeBtn.classList.toggle("active", !isCarousel);
+
+      if(isCarousel) startAuto();
+      else stopAuto();
+    }
+
+    carouselModeBtn.addEventListener("click", ()=> setMode("carousel"));
+    gridModeBtn.addEventListener("click", ()=> setMode("grid"));
+
+    function renderCarousel(){
+      track.innerHTML = featured.map(l => `<div class="slide">${cardMarkup(l)}</div>`).join("");
+      dots.innerHTML = featured.map((_,i)=> `<button class="dotBtn ${i===idx ? "active" : ""}" data-i="${i}" aria-label="Go to slide ${i+1}"></button>`).join("");
+
+      track.querySelectorAll(".card").forEach(el=>{
+        el.addEventListener("click", ()=> goToListing(el.getAttribute("data-id")));
+      });
+      dots.querySelectorAll(".dotBtn").forEach(el=>{
+        el.addEventListener("click", ()=>{
+          idx = Number(el.getAttribute("data-i")) || 0;
+          updateCarousel();
+          restartAuto();
+        });
+      });
+
+      updateCarousel();
+    }
+
+    function renderGrid(){
+      featuredGrid.innerHTML = featured.map(cardMarkup).join("");
+      featuredGrid.querySelectorAll(".card").forEach(el=>{
+        el.addEventListener("click", ()=> goToListing(el.getAttribute("data-id")));
+      });
+    }
+
+    function updateCarousel(){
+      const w = carousel.clientWidth;
+      track.style.transform = `translateX(${-idx * w}px)`;
+      dots.querySelectorAll(".dotBtn").forEach((d,i)=> d.classList.toggle("active", i === idx));
+      featuredCount.textContent = featured.length ? `${idx + 1} / ${featured.length}` : "0 / 0";
+    }
+
+    function prev(){
+      if(!featured.length) return;
+      idx = (idx - 1 + featured.length) % featured.length;
+      updateCarousel();
+      restartAuto();
+    }
+    function next(){
+      if(!featured.length) return;
+      idx = (idx + 1) % featured.length;
+      updateCarousel();
+      restartAuto();
+    }
+
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+    window.addEventListener("resize", ()=> updateCarousel());
+
+    function startAuto(){
+      stopAuto();
+      timer = setInterval(()=> next(), 7000);
+    }
+    function stopAuto(){
+      if(timer) clearInterval(timer);
+      timer = null;
+    }
+    function restartAuto(){
+      if(carousel.style.display === "block") startAuto();
+    }
+
+    async function loadFeatured(){
+      featuredCount.textContent = "Loading…";
+      featuredEmpty.style.display = "none";
+      featuredGrid.innerHTML = "";
+      track.innerHTML = "";
+      dots.innerHTML = "";
+
+      // ✅ NO INDEX REQUIRED
+      const qy = query(
+        collection(db, "listings"),
+        orderBy("createdAt", "desc"),
+        limit(120)
+      );
+
+      const snap = await getDocs(qy);
+      const all = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+      const now = Date.now();
+      featured = all.filter(l =>
+        l.status === "active" &&
+        l.featured === true &&
+        tsToMillis(l.featuredEnd) > now
+      );
+
+      featured.sort((a,b)=> tsToMillis(b.createdAt) - tsToMillis(a.createdAt));
+
+      if(!featured.length){
+        featuredCount.textContent = "0 / 0";
+        featuredEmpty.style.display = "block";
+        carousel.style.display = "none";
+        featuredGrid.style.display = "none";
+        stopAuto();
+        return;
+      }
+
+      idx = 0;
+      carousel.style.display = "block";
+      setMode("carousel");
+
+      renderCarousel();
+      renderGrid();
+    }
+
+    loadFeatured().catch(err=>{
+      console.error(err);
+      featuredCount.textContent = "Could not load";
+      featuredEmpty.style.display = "block";
+      featuredEmpty.textContent = "Could not load featured listings.";
+    });
+  </script>
+</body>
+</html>
